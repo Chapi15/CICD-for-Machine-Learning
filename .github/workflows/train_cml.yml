@@ -4,11 +4,13 @@ on:
   pull_request:
     branches: master
 
-permissions: write-all
-
 jobs:
   train_and_report_eval_performance:
     runs-on: ubuntu-latest
+
+    permissions: 
+      pull-requests: write 
+    
     steps:
       - name: Checkout 
         uses: actions/checkout@v3
