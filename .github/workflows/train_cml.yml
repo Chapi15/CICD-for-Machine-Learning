@@ -36,6 +36,10 @@ jobs:
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          git config --global --add safe.directory /__w/CICD-for-Machine-Learning/CICD-for-Machine-Learning
+          git fetch --prune
+          echo "## Metrics comparison" >> model_eval_report.md
+
           # Add metrics data to markdown
           cat metrics.json >> model_eval_report.md
           
@@ -43,6 +47,14 @@ jobs:
           echo "![confusion matrix plot](./confusion_matrix.png)" >> model_eval_report.md
 
           # Create comment from markdown report
-          cml comment create --pr --publish metrics.json
+          cml comment create --publish=true model_eval_report.md
+
+          # cml comment create --pr --publish metrics.json
 
           # cml comment create model_eval_report.md
+    
+      - name: Save markdown report
+        uses: actions/upload-artifact@v3
+        with:
+          name: markdown-report
+          path: ./model_eval_report.md
